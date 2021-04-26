@@ -1,0 +1,30 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Set variables once
+# variables:
+#   project_token: 
+#   test_run_id:
+
+steps:
+- script: |
+   echo "#! /bin/bash" > $(Pipeline.Workspace)/hiptest-publisher
+   echo "docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher  \"\$@\"" >> $(Pipeline.Workspace)/hiptest-publisher
+   sudo chmod +x $(Pipeline.Workspace)/hiptest-publisher
+  displayName: 'hiptest-publisher  docker image'
+- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) --only=features,step_definitions
+  displayName: 'Update the tests'
+- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) --test-run-id=$(test_run_id) --without=actionwords
+  displayName: 'Regenerate features and fetch UIDs in each scenario included in the test run'
+- script: mvn test 
+  displayName: 'Build tests'
+- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) -p "target/cuke-results.json" --test-run-id=$(test_run_id)
+  displayName: 'Push the test results file to HipTest'
