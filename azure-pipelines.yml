@@ -9,22 +9,15 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-# Set variables once
-# variables:
-#   project_token: 
-#   test_run_id:
-
 steps:
 - script: |
    echo "#! /bin/bash" > $(Pipeline.Workspace)/hiptest-publisher
    echo "docker run --rm --volume=\"$(pwd):/app\" hiptest/hiptest-publisher  \"\$@\"" >> $(Pipeline.Workspace)/hiptest-publisher
    sudo chmod +x $(Pipeline.Workspace)/hiptest-publisher
-  displayName: 'hiptest-publisher  docker image'
-- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) --only=features,step_definitions
-  displayName: 'Update the tests'
-- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) --test-run-id=$(test_run_id) --without=actionwords
-  displayName: 'Regenerate features and fetch UIDs in each scenario included in the test run'
+  displayName: 'Installing hiptest-publisher docker script as an executable file'
+- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(PROJECT_TOKEN) --test-run-id=$(TEST_RUN_ID) --without=actionwords
+  displayName: 'Updating feature files and fetch UIDs of tests'
 - script: mvn test 
-  displayName: 'Build tests'
-- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(project_token) -p "target/cuke-results.json" --test-run-id=$(test_run_id)
-  displayName: 'Push the test results file to HipTest'
+  displayName: 'Run tests'
+- script: $(Pipeline.Workspace)/hiptest-publisher -c cucumber-java.conf --token=$(PROJECT_TOKEN) -p="target/cuke-results.json" --test-run-id=$(TEST_RUN_ID)
+  displayName: 'Push JSON report to CucumberStudio test run'
