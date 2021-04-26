@@ -1,7 +1,7 @@
 package com.coffeemachine;
 
-import io.cucumber.datatable;
-import io.cucumber.java.en.*;
+import cucumber.api.DataTable;
+import cucumber.api.java.en.*;
 
 public class StepDefinitions {
     public Actionwords actionwords = new Actionwords();
