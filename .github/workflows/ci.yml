@@ -63,14 +63,14 @@ jobs:
     - name: list file
       run: ls ${GITHUB_WORKSPACE}/target/
       
-    - uses: actions/upload-artifact@v2
-      with:
-        name: My cucumber-json report file
-        path: ${GITHUB_WORKSPACE}/target/cuke-results.json
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: My cucumber-json report file
+    #     path: ${GITHUB_WORKSPACE}/target/cuke-results.json
         
-    - uses: actions/download-artifact@v2
-      with:
-        name: My cucumber-json report file
+    # - uses: actions/download-artifact@v2
+    #   with:
+    #     name: My cucumber-json report file
         
     - name: Push cucumber-json report file to CucumberStudio test run
       run: hiptest-publisher -c cucumber-java.conf --token=$CS_PPROJECT_ID --test-run-id=$TEST_RUN_ID --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
