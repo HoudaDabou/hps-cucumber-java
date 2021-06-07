@@ -43,7 +43,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Maven
-      run: mvn test
+      run: mvn --file ${GITHUB_WORKSPACE}/pom.xml test
       
     - uses: actions/upload-artifact@v2
       with:
