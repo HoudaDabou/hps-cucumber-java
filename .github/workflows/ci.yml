@@ -1,0 +1,57 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      CS_PPROJECT_ID: 25948683299224908224350389056467926582318416924212480699
+      TEST_RUN_ID: 272123
+      
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.5.5
+        bundler-cache: true
+    - name: Install hiptest-publisher
+      run: gem install hiptest-publisher    
+    - name: Update tests from CucumberStudio and fetch UIDs in scenarios
+      run: hiptest-publisher -c cucumber-java.conf --token=XXXXXX --test-run-id=XXXXXX --only=features --verbose
+      
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: My regenerated tests from CucumberStudio
+    #     path: $GITHUB_WORKSPACE/src/test/java/com/coffeemachine/features
+        
+    # - uses: actions/download-artifact@v2
+    #   with:
+    #     name: My regenerated tests from CucumberStudio
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Build with Maven
+      run: mvn test
+    - uses: actions/upload-artifact@v2
+      with:
+        name: My cucumber-json report file
+        path: $GITHUB_WORKSPACE/target/cuke-results.json
+        
+    - uses: actions/download-artifact@v2
+      with:
+        name: My cucumber-json report file
+        
+    - name: Push cucumber-json report file to CucumberStudio test run
+      run: hiptest-publisher -c cucumber-java.conf --token=XXXXXX --test-run-id=XXXXXX --push="$GITHUB_WORKSPACE/target/cuke-results.json" --verbose
