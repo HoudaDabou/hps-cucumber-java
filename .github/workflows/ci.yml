@@ -26,7 +26,7 @@ jobs:
     - name: Install hiptest-publisher
       run: gem install hiptest-publisher    
     - name: Update tests from CucumberStudio and fetch UIDs in scenarios
-      run: hiptest-publisher -c cucumber-java.conf --token=$CS_PPROJECT_ID --test-run-id=$TEST_RUN_ID --only=features --verbose
+      run: hiptest-publisher -c cucumber-java.conf --token="$CS_PPROJECT_ID" --test-run-id="$TEST_RUN_ID" --only=features --verbose
       
     # - uses: actions/upload-artifact@v2
     #   with:
