@@ -73,4 +73,4 @@ jobs:
     #     name: My cucumber-json report file
         
     - name: Push cucumber-json report file to CucumberStudio test run
-      run: hiptest-publisher -c cucumber-java.conf --token=$CS_PPROJECT_ID --test-run-id=$TEST_RUN_ID --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
+      run: hiptest-publisher -c cucumber-java.conf --token=25948683299224908224350389056467926582318416924212480699 --test-run-id=272123 --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
