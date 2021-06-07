@@ -57,6 +57,12 @@ jobs:
     - name: Build with Maven
       run: mvn --file ${GITHUB_WORKSPACE}/pom.xml test
       
+    - name: check report file
+      run: cat ${GITHUB_WORKSPACE}/target/cuke-results.json
+      
+    - name: list file
+      run: ls ${GITHUB_WORKSPACE}/target/
+      
     - uses: actions/upload-artifact@v2
       with:
         name: My cucumber-json report file
