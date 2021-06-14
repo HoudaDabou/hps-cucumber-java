@@ -41,4 +41,4 @@ jobs:
         -H "provider: github" \
         -H "repo: HoudaDabou/hps-cucumber-java" \
         -H "branch: master" \
-        -H "revision: ${GITHUB_SHA}"
+        -H "revision: 5faaec5ae27a0c42af5aff80529148aa265b8733"
