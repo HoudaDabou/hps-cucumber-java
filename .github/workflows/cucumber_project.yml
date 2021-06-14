@@ -30,7 +30,13 @@ jobs:
     - name: convert report file to the supported CucumberStudio format
       run: cat ${GITHUB_WORKSPACE}/target/cuke-results.json | ./node_modules/.bin/json-to-messages > ${GITHUB_WORKSPACE}/target/cuke-results.ndjson
     - name: check if ndjson has been properly generated
+      run: cat ${GITHUB_WORKSPACE}/target/cuke-results.ndjson
     - name: Push report file to CucumberStudio living documentation
-      uses: wei/curl@v1
-      with:
-        args: -X POST https://studio.cucumber.io/cucumber_project/results -F messages=@${GITHUB_WORKSPACE}/target/cuke-results.ndjson -H "project-access-token: 274619479310218793134342586214047524212722623749771759839" -H "provider: gitlab" -H "repo: houdabou/hps-cucumber-java" -H "branch: master" -H "revision: ${GITHUB_SHA}"
+      run: |
+        curl -X POST https://studio.cucumber.io/cucumber_project/results \
+        -F messages=@${GITHUB_WORKSPACE}/target/cuke-results.ndjson \
+        -H "project-access-token: 274619479310218793134342586214047524212722623749771759839" \
+        -H "provider: gitlab" \
+        -H "repo: houdabou/hps-cucumber-java" \
+        -H "branch: master" \
+        -H "revision: ${GITHUB_SHA}"
