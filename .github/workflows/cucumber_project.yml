@@ -31,8 +31,6 @@ jobs:
       run: cat ${GITHUB_WORKSPACE}/target/cuke-results.json | ./node_modules/.bin/json-to-messages > ${GITHUB_WORKSPACE}/target/cuke-results.ndjson
     - name: check if ndjson has been properly generated
       run: cat ${GITHUB_WORKSPACE}/target/cuke-results.ndjson
-    - name: check the revision
-      run: echo ${GITHUB_SHA}
     - name: Push report file to CucumberStudio living documentation
       run: |
         curl -X POST https://studio.cucumber.io/cucumber_project/results \
@@ -41,4 +39,4 @@ jobs:
         -H "provider: github" \
         -H "repo: HoudaDabou/hps-cucumber-java" \
         -H "branch: master" \
-        -H "revision: 5faaec5ae27a0c42af5aff80529148aa265b8733"
+        -H "revision: ${GITHUB_SHA}"
