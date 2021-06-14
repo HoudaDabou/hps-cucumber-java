@@ -32,10 +32,12 @@ jobs:
     - name: check if ndjson has been properly generated
       run: cat ${GITHUB_WORKSPACE}/target/cuke-results.ndjson
     - name: Push report file to CucumberStudio living documentation
+      env:
+        CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_PROJECT_TOKEN }}
       run: |
         curl -X POST https://studio.cucumber.io/cucumber_project/results \
         -F messages=@${GITHUB_WORKSPACE}/target/cuke-results.ndjson \
-        -H "project-access-token: 274619479310218793134342586214047524212722623749771759839" \
+        -H "project-access-token: ${CS_PROJECT_ACCESS_TOKEN}" \
         -H "provider: github" \
         -H "repo: HoudaDabou/hps-cucumber-java" \
         -H "branch: master" \
