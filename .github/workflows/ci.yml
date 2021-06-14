@@ -23,7 +23,9 @@ jobs:
     - name: Install hiptest-publisher
       run: gem install hiptest-publisher    
     - name: Update tests from CucumberStudio and fetch UIDs in scenarios
-      run: hiptest-publisher -c cucumber-java.conf --token=15788872899893425937697122206078327453805760499019432344 --test-run-id=550064 --only=features --verbose
+      env:
+        CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
+      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=550064 --only=features --verbose
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
@@ -32,4 +34,4 @@ jobs:
     - name: Build with Maven
       run: mvn --file ${GITHUB_WORKSPACE}/pom.xml test
     - name: Push cucumber-json report file to CucumberStudio test run
-      run: hiptest-publisher -c cucumber-java.conf --token=15788872899893425937697122206078327453805760499019432344 --test-run-id=550064 --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
+      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=550064 --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
