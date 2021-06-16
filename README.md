@@ -1,5 +1,5 @@
 # hps-cucumber-java
-
+[![Hiptest Status](https://studio.cucumber.io/badges/test_run/307358)](https://studio.cucumber.io/projects/5342/test-runs/307358/overview)
 [![Build Status](https://travis-ci.org/hiptest/hps-cucumber-java.svg?branch=master)](https://travis-ci.org/hiptest/hps-cucumber-java)
 
 Hiptest publisher samples with Cucumber/Java
