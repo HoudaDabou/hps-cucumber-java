@@ -2,6 +2,7 @@
 
 rm -Rf ./sc_tag_testrun.json
 rm -Rf ./ids_scenarios.json
+rm -Rf ./test_run_id.json
 
 TAG_KEY="RegressionALL"
 
@@ -47,9 +48,12 @@ if [[ $? -eq 0 && $response =~ ^2 ]]; then
             --data '{"data": {"attributes": {"name": "My new test run based on '"$TAG_KEY"' tag", "description": "This test run has been created from a GitHub workflow", "scenario_ids": ['"$ids_scenarios"'] } } }' \
             | jq -r '.data["id"]' )
 
-    echo "::set-output name=TEST_RUN_ID::$test_run_id"
+    # echo "::set-output name=TEST_RUN_ID::$test_run_id"
+
+    echo $test_run_id >> ./test_run_id.json
 
     sleep 1
+
     # echo "Your test run ID: $test_run_id has been successfully created"
 
   else
