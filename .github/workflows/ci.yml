@@ -24,7 +24,7 @@ jobs:
         API_CLIENT: ${{ secrets.API_CLIENT }}    
       run: |
          chmod +x "./.github/create_tr_sc_tags_CI.sh"
-         sh ./.github/create_tr_sc_tags_CI.sh
+         ./.github/create_tr_sc_tags_CI.sh
       shell: bash
       
 
