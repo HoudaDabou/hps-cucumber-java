@@ -16,6 +16,20 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
+    - name: create a test run based on a given scenarios's tag
+      id: test_run_id
+      env: |
+        API_ACCESS_TOKEN:${{ secrets.API_ACCESS_TOKEN }}
+        API_UID: ${{ secrets.API_UID }}
+        API_CLIENT: ${{ secrets.API_CLIENT }}
+      run: |
+         sh "${GITHUB_WORKSPACE}/create_tr_sc_tags_CI.sh"
+      shell: bash
+    - name: Cache node modules
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ steps.test_run_id.outputs.test_run_id }}
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.5.5
@@ -36,4 +50,5 @@ jobs:
     - name: Push cucumber-json report file to CucumberStudio test run
       env:
         CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
-      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=258233 --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
+        TEST_RUN_ID: ${{ steps.keyvalue.outputs.test_run_id }}
+      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${TEST_RUN_ID} --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
