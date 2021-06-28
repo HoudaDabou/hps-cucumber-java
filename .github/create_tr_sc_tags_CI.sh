@@ -46,14 +46,10 @@ if [[ $? -eq 0 && $response =~ ^2 ]]; then
             -H "client: $API_CLIENT" \
             --data '{"data": {"attributes": {"name": "My new test run based on '"$TAG_KEY"' tag", "description": "This test run has been created from a GitHub workflow", "scenario_ids": ['"$ids_scenarios"'] } } }' \
             | jq -r '.data["id"]' )
-            
-    echo "::set-env name=TEST_RUN_ID::$test_run_id"
 
-    # echo "::set-output name=TEST_RUN_ID::$test_run_id"
+    echo "::set-output name=TEST_RUN_ID::$test_run_id"
 
-    # echo "{test_run_id}={$test_run_id}" > ${TEST_RUN_ID}
     sleep 1
-
     # echo "Your test run ID: $test_run_id has been successfully created"
 
   else
