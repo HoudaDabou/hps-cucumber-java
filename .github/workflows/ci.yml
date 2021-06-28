@@ -26,10 +26,10 @@ jobs:
       run: |
          chmod +x "./.github/create_tr_sc_tags_CI.sh"
          ./.github/create_tr_sc_tags_CI.sh
-         echo $TEST_RUN_ID
-         echo ${{env.TEST_RUN_ID }}
+         echo ::set-output name=TEST_RUN_ID::$(cat ./test_run_id.json)
       shell: bash
-  
+      id: test_run_id
+      
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.5.5
@@ -39,7 +39,8 @@ jobs:
     - name: Update tests from CucumberStudio and fetch UIDs in scenarios
       env:
         CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
-      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${env.TEST_RUN_ID} --only=features --verbose
+        TEST_RUN_ID: ${{ steps.version.test_run_id.TEST_RUN_ID }}
+      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${TEST_RUN_ID} --only=features --verbose
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
@@ -50,5 +51,5 @@ jobs:
     - name: Push cucumber-json report file to CucumberStudio test run
       env:
         CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
-        TEST_RUN_ID: ${{ steps.keyvalue.outputs.test_run_id }}
-      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${env.TEST_RUN_ID} --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
+        TEST_RUN_ID: ${{ steps.version.test_run_id.TEST_RUN_ID }}
+      run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${TEST_RUN_ID} --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
