@@ -27,7 +27,9 @@ jobs:
          echo "::set-output name=TEST_RUN_ID::$(cat ./test_run_id.json)"
       shell: bash
       id: test_run_id
-      
+    - name: Get test run ID
+      run: echo "The test run ID is ${{ steps.test_run_id.outputs.TEST_RUN_ID }}"
+
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.5.5
@@ -37,7 +39,7 @@ jobs:
     - name: Update tests from CucumberStudio and fetch UIDs in scenarios
       env:
         CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
-        TEST_RUN_ID: ${{ steps.version.test_run_id.TEST_RUN_ID }}
+        TEST_RUN_ID: ${{ steps.test_run_id.outputs.TEST_RUN_ID }}
       run: |
         echo ${TEST_RUN_ID}
         echo "test run ID checked before"
@@ -52,5 +54,5 @@ jobs:
     - name: Push cucumber-json report file to CucumberStudio test run
       env:
         CS_PROJECT_ACCESS_TOKEN: ${{ secrets.CS_TOKEN_PTOJECT }}
-        TEST_RUN_ID: ${{ steps.version.test_run_id.TEST_RUN_ID }}
+        TEST_RUN_ID: ${{ steps.test_run_id.outputs.TEST_RUN_ID }}
       run: hiptest-publisher -c cucumber-java.conf --token=${CS_PROJECT_ACCESS_TOKEN} --test-run-id=${TEST_RUN_ID} --push="${GITHUB_WORKSPACE}/target/cuke-results.json" --verbose
