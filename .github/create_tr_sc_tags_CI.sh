@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -Rf sc_tag_testrun.json
-rm -Rf ids_scenarios.json
+rm -Rf ./sc_tag_testrun.json
+rm -Rf ./ids_scenarios.json
 
 TAG_KEY="RegressionALL"
 
@@ -11,12 +11,12 @@ response=$(curl -sS "https://app.hiptest.com/api/projects/$PROJECT_ID/scenarios/
   -H "access-token: $API_ACCESS_TOKEN" \
   -H "uid: $API_UID" \
   -H "client: $API_CLIENT" \
-  -o sc_tag_testrun.json \
+  -o ./sc_tag_testrun.json \
   -w %{http_code})
 
 if [[ $? -eq 0 && $response =~ ^2 ]]; then
 
-  readarray -t scenario_ids < <(jq -r '.data[].id' sc_tag_testrun.json)
+  readarray -t scenario_ids < <(jq -r '.data[].id' ./sc_tag_testrun.json)
 
   n=${#scenario_ids[@]}
   last=$(( ${#scenario_ids[*]} -1))
@@ -37,7 +37,7 @@ if [[ $? -eq 0 && $response =~ ^2 ]]; then
 
   if [[ $? -eq 0 && $response =~ ^2 ]]; then
 
-    ids_scenarios=$(cat ids_scenarios.json)
+    ids_scenarios=$(cat ./ids_scenarios.json)
 
     test_run_id=$( curl -sS https://app.hiptest.com/api/projects/$PROJECT_ID/test_runs \
             -H "accept: application/vnd.api+json; version=1" \
@@ -47,7 +47,9 @@ if [[ $? -eq 0 && $response =~ ^2 ]]; then
             --data '{"data": {"attributes": {"name": "My new test run based on '"$TAG_KEY"' tag", "description": "This test run has been created from a GitHub workflow", "scenario_ids": ['"$ids_scenarios"'] } } }' \
             | jq -r '.data["id"]' )
 
-    echo "::set-output name=test_run_id::$test_run_id"
+    # echo "::set-output name=test_run_id::$test_run_id"
+
+    echo "{test_run_id}={$test_run_id}" >> $TEST_RUN_ID
     sleep 1
 
     # echo "Your test run ID: $test_run_id has been successfully created"
