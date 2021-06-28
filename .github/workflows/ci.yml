@@ -21,7 +21,8 @@ jobs:
       env:
         API_ACCESS_TOKEN: ${{ secrets.API_ACCESS_TOKEN }}
         API_UID: ${{ secrets.API_UID }}
-        API_CLIENT: ${{ secrets.API_CLIENT }}    
+        API_CLIENT: ${{ secrets.API_CLIENT }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
       run: |
          chmod +x "./.github/create_tr_sc_tags_CI.sh"
          ./.github/create_tr_sc_tags_CI.sh
