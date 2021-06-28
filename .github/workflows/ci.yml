@@ -23,7 +23,8 @@ jobs:
         API_UID: ${{ secrets.API_UID }}
         API_CLIENT: ${{ secrets.API_CLIENT }}
       run: |
-         sh create_tr_sc_tags_CI.sh
+         chmod +x "${GITHUB_WORKSPACE}/.github/create_tr_sc_tags_CI.sh"
+         ./${GITHUB_WORKSPACE}/.github/create_tr_sc_tags_CI.sh
       shell: bash
     - name: Cache node modules
       uses: actions/cache@v1
